@@ -1,0 +1,16 @@
+{
+  "name": "skills",
+  "owner": {
+    "name": "Gustavo Carvalho",
+    "email": "gustavo.carvalho@pigz.com.br"
+  },
+  "description": "Product OS and code quality skills",
+  "plugins": [
+    {
+      "name": "skills",
+      "source": "./",
+      "description": "Product OS and code quality skills",
+      "version": "1.0.0"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "skills",
+  "version": "1.0.0",
+  "description": "Product OS and code quality skills",
+  "author": {
+    "name": "Gustavo Carvalho",
+    "email": "gustavo.carvalho@pigz.com.br"
+  },
+  "skills": [
+    "./code/quality/",
+    "./code/tests/",
+    "./product/"
+  ]
+}
