@@ -70,9 +70,10 @@ skills/
 │   ├── problem-formulation
 │   ├── prioritization
 │   └── mvp-definition
+├── writing/     Writing & critique workflows
+│   └── blog/blog-critic
 ├── agents/      Subagent personas that drive the skills
 │   └── product-manager.md
-└── writing/     (reserved — no skills yet)
 ```
 
 ---
@@ -109,6 +110,14 @@ market-research → competitive-benchmark → discovery-interviews
 ### Where to start
 
 Building a product from scratch? **Start at #1 (`market-research`)** — it produces the Market Map every later skill builds on. Skip a step only when you already own that input (e.g. a known market → jump to #2 or #4); skipping otherwise just forces the next skill to guess the missing data.
+
+---
+
+## `writing/` — Writing & critique
+
+| Skill | What it does |
+|-------|--------------|
+| **blog-critic** | Deep, Socratic critique of a technical article you wrote — a critic, not a rewriter. Channels Fábio Akita's structural rigor and Lucas Montano's directness to push you on five dimensions (structure, storytelling, voice, depth, gaps): sharp observations + questions that force you to think harder, never a rewrite. Writes the critique in the article's own language (PT or EN). |
 
 ---
 
