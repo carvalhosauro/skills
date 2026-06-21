@@ -21,6 +21,7 @@
         "./product/mvp-definition",
         "./code/quality/code-hygiene-review",
         "./code/tests/test-coverage-and-logging",
+        "./code/experimental/disposable-scripts",
         "./writing/blog/blog-critic"
       ],
       "agents": [
