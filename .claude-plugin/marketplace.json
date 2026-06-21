@@ -9,8 +9,19 @@
     {
       "name": "skills",
       "source": "./",
-      "description": "Product OS and code quality skills",
-      "version": "1.0.0"
+      "description": "Product OS (idea to MVP) and code-quality skills",
+      "version": "1.0.0",
+      "strict": false,
+      "skills": [
+        "./product/market-research",
+        "./product/competitive-benchmark",
+        "./product/discovery-interviews",
+        "./product/problem-formulation",
+        "./product/prioritization",
+        "./product/mvp-definition",
+        "./code/quality/code-hygiene-review",
+        "./code/tests/test-coverage-and-logging"
+      ]
     }
   ]
 }
