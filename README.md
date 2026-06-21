@@ -60,9 +60,10 @@ Skills are grouped by domain. Each lives in its own directory holding a `SKILL.m
 
 ```
 skills/
-├── code/        Engineering quality workflows
+├── code/        Engineering workflows
 │   ├── quality/code-hygiene-review
-│   └── tests/test-coverage-and-logging
+│   ├── tests/test-coverage-and-logging
+│   └── experimental/disposable-scripts
 ├── product/     The "Product OS" — an idea-to-MVP pipeline
 │   ├── market-research
 │   ├── competitive-benchmark
@@ -78,7 +79,7 @@ skills/
 
 ---
 
-## `code/` — Engineering quality
+## `code/` — Engineering
 
 Standalone skills you run during or after a coding session. They are independent of each other.
 
@@ -86,6 +87,7 @@ Standalone skills you run during or after a coding session. They are independent
 |-------|--------------|
 | **code-hygiene-review** | Readability-focused review of recently written code. Dispatches one subagent per category (magic values, dead code, duplication, N+1 queries, missing typing, general readability). **Reports only — never edits.** Run it after a long session or before opening a PR. |
 | **test-coverage-and-logging** | Runs the test suite, measures coverage, audits test quality and logging, then **writes the missing tests** it finds — following the project's own framework and conventions. The testing counterpart to a hygiene review. |
+| **disposable-scripts** | Generates throwaway, single-use scripts to answer a quick question (probe a route with curl, benchmark two approaches) where the **answer matters but the code doesn't**. Scripts go in `experimental/` (gitignored); a report of what was done and the result lands in `docs/experimental/`. |
 
 ---
 
