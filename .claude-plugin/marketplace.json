@@ -22,7 +22,8 @@
         "./code/quality/code-hygiene-review",
         "./code/tests/test-coverage-and-logging",
         "./code/experimental/disposable-scripts",
-        "./writing/blog/blog-critic"
+        "./writing/blog/blog-critic",
+        "./writing/blog/blog-refiner"
       ],
       "agents": [
         "./agents/product-manager.md"
