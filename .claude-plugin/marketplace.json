@@ -20,7 +20,8 @@
         "./product/prioritization",
         "./product/mvp-definition",
         "./code/quality/code-hygiene-review",
-        "./code/tests/test-coverage-and-logging"
+        "./code/tests/test-coverage-and-logging",
+        "./writing/blog/blog-critic"
       ],
       "agents": [
         "./agents/product-manager.md"
