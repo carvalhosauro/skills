@@ -72,7 +72,8 @@ skills/
 │   ├── prioritization
 │   └── mvp-definition
 ├── writing/     Writing & critique workflows
-│   └── blog/blog-critic
+│   ├── blog/blog-critic
+│   └── blog/blog-refiner
 ├── agents/      Subagent personas that drive the skills
 │   └── product-manager.md
 ```
@@ -120,6 +121,7 @@ Building a product from scratch? **Start at #1 (`market-research`)** — it prod
 | Skill | What it does |
 |-------|--------------|
 | **blog-critic** | Deep, Socratic critique of a technical article you wrote — a critic, not a rewriter. Channels Fábio Akita's structural rigor and Lucas Montano's directness to push you on five dimensions (structure, storytelling, voice, depth, gaps): sharp observations + questions that force you to think harder, never a rewrite. Writes the critique in the article's own language (PT or EN). |
+| **blog-refiner** | The companion that *does* rewrite — collaboratively, section by section, in **your** voice. Runs a question → answer → rewrite → validate loop per block, pulling only from your material, and never homogenizes the prose into generic AI writing. Outputs the rewritten article to a new file. Pairs naturally right after a blog-critic pass: the critic names the problems, the refiner fixes them *with* you. |
 
 ---
 
