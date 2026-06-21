@@ -36,8 +36,9 @@ The fundamental rule: **focus on the problem, never the solution.**
 
 **Locate the wedge (required):** check sent files and the Product OS folder (in
 Claude.ai/Cowork: `/mnt/user-data/uploads/` and `/mnt/user-data/outputs/`, looking for `benchmark-*.md`).
-If there is no Benchmark anywhere, **STOP** and offer to run the competitive-benchmark skill first —
-without the wedge there's no focus to sharpen.
+If there is no Benchmark anywhere, **STOP** and immediately invoke the `competitive-benchmark` skill
+using the Skill tool — it will generate the wedge (and cascade to `market-research` if also missing).
+Once it completes, read the output and continue.
 
 **Locate interviews (optional):** look for `interview-synthesis-*.md`.
 - **If they exist** → use as primary evidence; the definition comes out marked as **validated**.

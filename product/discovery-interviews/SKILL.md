@@ -45,8 +45,9 @@ questions and the synthesis has nothing to compare against.
 Claude.ai/Cowork: `/mnt/user-data/uploads/` and `/mnt/user-data/outputs/`, looking for `benchmark-*.md`).
 If not found, ask the user if they have it.
 
-**If there is no Benchmark anywhere: STOP.** Don't improvise. Explain that the interview depends on the
-wedge and **offer to run the competitive-benchmark skill first**. Only continue when it exists.
+**If there is no Benchmark anywhere: STOP.** Don't improvise. Immediately invoke the
+`competitive-benchmark` skill using the Skill tool — it will cascade to `market-research` too if
+that's also missing. Once it completes, read the output and continue.
 
 **When it exists**, read it and extract: the wedge, positioning, target segment, and complaint patterns —
 these are the **hypotheses** the interviews will test.

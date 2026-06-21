@@ -37,7 +37,8 @@ Look for candidates in the Product OS (in Claude.ai/Cowork: `/mnt/user-data/uplo
 - `interview-synthesis-*.md` → pain patterns with importance/satisfaction signals.
 
 Present what you found as a candidate list and let the user **confirm, edit, and add** their own items.
-If the Product OS is empty, ask the user for the list.
+If the Product OS is empty and the user doesn't have a list ready, invoke the `problem-formulation`
+skill using the Skill tool — it will cascade through the full pipeline and produce candidates.
 
 ### 2. Define what is being prioritized
 

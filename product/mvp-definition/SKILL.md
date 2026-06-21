@@ -36,9 +36,12 @@ Look in the Product OS (in Claude.ai/Cowork: `/mnt/user-data/uploads/` and `/mnt
 - `problem-*.md` → the problem to tackle (and whether it's a hypothesis or validated).
 - `prioritization-*.md` → confirmation that this is the #1 problem to solve now.
 
-Use them when they exist. **If none exist**, ask the user to describe the problem and continue —
-but note in one line: defining an MVP for a problem not yet formulated/validated is a bigger bet, and
-the problem-formulation and prioritization skills exist to reduce that risk. Don't block; just flag.
+Use them when they exist. **If none exist**, ask the user if they want to follow the full pipeline
+or jump straight to MVP with a raw problem description:
+- **Full pipeline** → invoke the `prioritization` skill using the Skill tool (cascades through
+  problem-formulation → competitive-benchmark → market-research as needed).
+- **Raw description** → ask the user to describe the problem and continue, but note that this is
+  a bigger bet and the pipeline skills exist to reduce that risk.
 
 If the problem is marked as a **hypothesis**, remember that the best MVP may be precisely the one that
 validates the hypothesis most cheaply (see "build approach").

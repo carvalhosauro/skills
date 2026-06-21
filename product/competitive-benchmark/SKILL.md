@@ -37,10 +37,9 @@ that give the comparison meaning.
    `market-map-*.md`).
 2. If not found, ask the user if they have the Map (they can paste it or send the file).
 
-**If there is no Market Map anywhere: STOP.** Don't improvise the market research here —
-that would break the pipeline's purpose and produce an unfounded analysis. Instead, clearly tell
-the user that the Benchmark depends on a Market Map and **offer to run the market-research skill first**.
-Only continue when the Map exists.
+**If there is no Market Map anywhere: STOP.** Don't improvise the market research here.
+Immediately invoke the `market-research` skill using the Skill tool — it generates the Market Map
+automatically. Once it completes, read the output file and continue with Phase 0 below.
 
 **When the Map exists**, read it and extract: the scope (product + niche), segments, prioritized pains,
 already-cited competitors, and the unknowns raised. All of this is the starting point.
