@@ -21,6 +21,9 @@
         "./product/mvp-definition",
         "./code/quality/code-hygiene-review",
         "./code/tests/test-coverage-and-logging"
+      ],
+      "agents": [
+        "./agents/product-manager.md"
       ]
     }
   ]
