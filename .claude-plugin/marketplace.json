@@ -10,7 +10,7 @@
       "name": "skills",
       "source": "./",
       "description": "Product OS (idea to MVP) and code-quality skills",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "strict": false,
       "skills": [
         "./product/market-research",
@@ -19,6 +19,8 @@
         "./product/problem-formulation",
         "./product/prioritization",
         "./product/mvp-definition",
+        "./product/marclou-review",
+        "./code/project-docs",
         "./code/quality/code-hygiene-review",
         "./code/tests/test-coverage-and-logging",
         "./code/experimental/disposable-scripts",

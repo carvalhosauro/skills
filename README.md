@@ -61,6 +61,7 @@ Skills are grouped by domain. Each lives in its own directory holding a `SKILL.m
 ```
 skills/
 ├── code/        Engineering workflows
+│   ├── project-docs
 │   ├── quality/code-hygiene-review
 │   ├── tests/test-coverage-and-logging
 │   └── experimental/disposable-scripts
@@ -70,7 +71,8 @@ skills/
 │   ├── discovery-interviews
 │   ├── problem-formulation
 │   ├── prioritization
-│   └── mvp-definition
+│   ├── mvp-definition
+│   └── marclou-review
 ├── writing/     Writing & critique workflows
 │   ├── blog/blog-critic
 │   └── blog/blog-refiner
@@ -86,6 +88,7 @@ Standalone skills you run during or after a coding session. They are independent
 
 | Skill | What it does |
 |-------|--------------|
+| **project-docs** | Standardizes project-state documentation for agents (`AGENTS.md` + `docs/{STATUS,ROADMAP,DECISIONS,DESIGN}.md`). Three profiles — *continuity* (greenfield), *shipping* (mature OSS), *design-first* (RFCs). Init, session-end, decision recording. Multi-harness (Claude, Cursor, Codex, OpenCode). No hooks. |
 | **code-hygiene-review** | Readability-focused review of recently written code. Dispatches one subagent per category (magic values, dead code, duplication, N+1 queries, missing typing, general readability). **Reports only — never edits.** Run it after a long session or before opening a PR. |
 | **test-coverage-and-logging** | Runs the test suite, measures coverage, audits test quality and logging, then **writes the missing tests** it finds — following the project's own framework and conventions. The testing counterpart to a hygiene review. |
 | **disposable-scripts** | Generates throwaway, single-use scripts to answer a quick question (probe a route with curl, benchmark two approaches) where the **answer matters but the code doesn't**. Scripts go in `experimental/` (gitignored); a report of what was done and the result lands in `docs/experimental/`. |
@@ -109,6 +112,7 @@ market-research → competitive-benchmark → discovery-interviews
 | 4 | **problem-formulation** | Turns the evidence into a **sharp, singular problem** in two formats side by side — causal and job-to-be-done. Rejects solutions disguised as problems. | wedge (#2); interviews (#3) optional |
 | 5 | **prioritization** | Ranks problems/features to answer "if I solve only one thing, which is worth most?". Auto-picks the framework (Opportunity Scoring / ICE / RICE) and shows the reasoning. | a list of problems/opportunities |
 | 6 | **mvp-definition** | Defines the **smallest thing that delivers value** — isolates the value moment, produces scope (IN), cut list (OUT), build approach (manual / no-code / code), and the success signal. | formulated problem + prioritization (also runs standalone) |
+| — | **marclou-review** | Audits or shapes landing pages, pricing, copy, and positioning against **Marc Lou's 32 Principles of a Viral Product**. Two modes: **audit** (scorecard + top-5 prioritized fixes with concrete rewrites) and **build** (applies the principles as constraints while generating headlines, heroes, pricing, names). Compass, not checklist — flags deliberate deviations instead of forcing compliance. | nothing — standalone (pairs well after #6) |
 
 ### Where to start
 
