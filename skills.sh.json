@@ -1,0 +1,26 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Engineering",
+      "description": "Session hygiene, behavior tests, project memory, and A-vs-B benchmarks.",
+      "skills": [
+        "hygiene-review",
+        "behavior-tests",
+        "project-docs",
+        "compare-alternatives"
+      ]
+    },
+    {
+      "title": "Product",
+      "description": "Landing page, pricing, and viral-product positioning critique.",
+      "skills": ["viral-product-review"]
+    },
+    {
+      "title": "Writing",
+      "description": "Technical blog critique and collaborative refinement.",
+      "skills": ["blog-critic", "blog-refiner"]
+    }
+  ]
+}

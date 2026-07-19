@@ -1,147 +1,109 @@
 # Skills
 
-A personal collection of [Claude Code](https://docs.anthropic.com/en/docs/claude-code) **skills** and **agents**. Each skill is a self-contained `SKILL.md` that teaches Claude a repeatable workflow — invoked automatically when your request matches, or explicitly with `/<skill-name>`. Agents are subagent personas (under `agents/`) that drive several skills toward a larger goal.
+Personal [Agent Skills](https://agentskills.io) — reusable `SKILL.md` workflows that work across **Claude Code, Cursor, Codex, OpenCode, Copilot**, and [dozens more](https://github.com/vercel-labs/skills#supported-agents).
 
-> **Skills are cross-tool.** `SKILL.md` follows the [Agent Skills](https://code.claude.com/docs/en/skills) spec, so the same files work in Claude Code (`~/.claude/skills/`), [Codex CLI](https://developers.openai.com/codex/skills) (`~/.codex/skills/`), and [OpenCode](https://opencode.ai/docs/skills/) (`.opencode/skills/`) — only the install location differs. Agents and the plugin marketplace below are Claude Code-specific.
+Browse: [skills.sh/carvalhosauro/skills](https://skills.sh/carvalhosauro/skills)
 
-## Install
+## Install (recommended) — skills.sh
 
-Two ways to install — a local script (short skill names, auto-updates with `git pull`) or the plugin marketplace (namespaced, shareable). Pick one.
+The [Skills CLI](https://github.com/vercel-labs/skills) discovers every `SKILL.md` in this repo and installs into the agents you have (or the ones you pass with `-a`).
 
-### Option A — Script (recommended)
+```bash
+# List what's in the repo
+npx skills add carvalhosauro/skills --list
 
-Clones the repo and **symlinks** every skill into `~/.claude/skills/` and every agent into `~/.claude/agents/`. Because they're symlinks, a later `git pull` updates everything you installed at once.
+# Install everything to every detected agent
+npx skills add carvalhosauro/skills --all
+
+# Or pick skills / agents
+npx skills add carvalhosauro/skills -g -y \
+  --skill hygiene-review --skill behavior-tests \
+  -a claude-code -a cursor -a codex -a opencode
+
+# Single skill
+npx skills add carvalhosauro/skills --skill viral-product-review -g -y
+```
+
+| Flag | Meaning |
+|------|---------|
+| `-g` | Global (`~/.…/skills/`) instead of project-local |
+| `-a <agent>` | Target agent(s): `claude-code`, `cursor`, `codex`, `opencode`, `github-copilot`, … |
+| `-s / --skill` | One or more skill names (`'*'` = all) |
+| `--all` | All skills → all agents (non-interactive with `-y`) |
+| `-y` | Skip prompts |
+
+Update later: `npx skills update` · remove: `npx skills remove <name>`.
+
+### Local clone (dev)
 
 ```bash
 git clone git@github.com:carvalhosauro/skills.git
-cd skills
-./install.sh
+npx skills add ./skills --list
+npx skills add ./skills -g -y --skill '*' -a claude-code -a cursor
 ```
 
-Then run `/reload-plugins` in Claude Code (or restart). Skills get short names: `/market-research`, `/code-hygiene-review`, … and the `product-manager` agent becomes available.
+## Install — Claude Code only
+
+### Script (symlinks; tracks `git pull`)
 
 ```bash
-./install.sh            # symlink all skills + agents (default)
-./install.sh --copy     # copy instead of symlink (snapshot, won't track git)
-./install.sh --uninstall  # remove the symlinks this repo created
-./install.sh --help
+git clone git@github.com:carvalhosauro/skills.git
+cd skills && ./install.sh
 ```
 
-The script auto-discovers every `SKILL.md` and `agents/*.md`, is idempotent (safe to re-run), never clobbers files it didn't create, and honors `$CLAUDE_CONFIG_DIR` (defaults to `~/.claude`).
+Then `/reload-plugins` (or restart). Options: `--copy`, `--uninstall`, `--help`. Honors `$CLAUDE_CONFIG_DIR`.
 
-**Other tools:** for Codex or OpenCode, copy the skill directories into that tool's skills folder (`~/.codex/skills/`, `.opencode/skills/`) — e.g. `cp -r product/* ~/.codex/skills/`. The `install.sh` script and the marketplace below target Claude Code only.
-
-### Option B — Plugin marketplace
-
-Install through Claude Code's plugin system. Run these **inside Claude Code** (they're slash commands):
+### Plugin marketplace
 
 ```text
 /plugin marketplace add carvalhosauro/skills
 /plugin install skills@skills
 ```
 
-- `carvalhosauro/skills` is the **GitHub repo** (the marketplace source).
-- `skills@skills` is `<plugin-name>@<marketplace-name>` as declared in `.claude-plugin/marketplace.json`.
-- Plugin skills are **namespaced**: `/skills:market-research`, `/skills:code-hygiene-review`, …
-- The `product-manager` agent ships with the plugin too.
-- Update later with `/plugin marketplace update skills`.
-
-### Option C — A single skill, manually
-
-Symlink (or copy) just the one you want:
-
-```bash
-ln -s "$PWD/product/market-research" ~/.claude/skills/market-research
-```
+Namespaced: `/skills:hygiene-review`, … Update: `/plugin marketplace update skills`.
 
 ## Organization
 
-Skills are grouped by domain. Each lives in its own directory holding a `SKILL.md` (and any supporting files).
-
 ```
 skills/
-├── code/        Engineering workflows
+├── code/
 │   ├── project-docs
-│   ├── quality/code-hygiene-review
-│   ├── tests/test-coverage-and-logging
-│   └── experimental/disposable-scripts
-├── product/     The "Product OS" — an idea-to-MVP pipeline
-│   ├── market-research
-│   ├── competitive-benchmark
-│   ├── discovery-interviews
-│   ├── problem-formulation
-│   ├── prioritization
-│   ├── mvp-definition
-│   └── marclou-review
-├── writing/     Writing & critique workflows
-│   ├── blog/blog-critic
-│   └── blog/blog-refiner
-├── agents/      Subagent personas that drive the skills
-│   └── product-manager.md
+│   ├── review/hygiene-review
+│   ├── tests/behavior-tests
+│   └── benchmark/compare-alternatives
+├── product/
+│   └── viral-product-review
+├── writing/blog/
+│   ├── blog-critic
+│   └── blog-refiner
+└── agents/          # empty — no orchestrator agents in this release
 ```
 
----
+> **Breaking (v1.2.0):** Product OS pipeline + `product-manager` removed. Renames: `marclou-review` → `viral-product-review`, `code-hygiene-review` → `hygiene-review`, `test-coverage-and-logging` → `behavior-tests`, `disposable-scripts` → `compare-alternatives`.
 
-## `code/` — Engineering
-
-Standalone skills you run during or after a coding session. They are independent of each other.
+### `code/` — Engineering
 
 | Skill | What it does |
 |-------|--------------|
-| **project-docs** | Standardizes project-state documentation for agents (`AGENTS.md` + `docs/{STATUS,ROADMAP,DECISIONS,DESIGN}.md`). Three profiles — *continuity* (greenfield), *shipping* (mature OSS), *design-first* (RFCs). Init, session-end, decision recording. Multi-harness (Claude, Cursor, Codex, OpenCode). No hooks. |
-| **code-hygiene-review** | Readability-focused review of recently written code. Dispatches one subagent per category (magic values, dead code, duplication, N+1 queries, missing typing, general readability). **Reports only — never edits.** Run it after a long session or before opening a PR. |
-| **test-coverage-and-logging** | Runs the test suite, measures coverage, audits test quality and logging, then **writes the missing tests** it finds — following the project's own framework and conventions. The testing counterpart to a hygiene review. |
-| **disposable-scripts** | Generates throwaway, single-use scripts to answer a quick question (probe a route with curl, benchmark two approaches) where the **answer matters but the code doesn't**. Scripts go in `experimental/` (gitignored); a report of what was done and the result lands in `docs/experimental/`. |
+| **project-docs** | Durable project memory for agents: `AGENTS.md` + `docs/{STATUS,ROADMAP,DECISIONS,DESIGN}.md`. |
+| **hygiene-review** | Session-aftermath readability review (9 parallel check categories). Reports only. |
+| **behavior-tests** | Missing tests for **flows, business rules, happy + bad paths** (+ logging audit). |
+| **compare-alternatives** | Throwaway A-vs-B benchmarks; report in `docs/experimental/`. |
 
----
-
-## `product/` — The Product OS
-
-Six skills that chain into one pipeline: **market → wedge → real pain → sharp problem → what comes first → MVP.** Each skill consumes the previous skill's output and feeds the next. Run them in order for a product from scratch; jump in mid-pipeline if earlier stages are already validated.
-
-```
-market-research → competitive-benchmark → discovery-interviews
-        → problem-formulation → prioritization → mvp-definition
-```
-
-| # | Skill | What it does | Requires |
-|---|-------|--------------|----------|
-| 1 | **market-research** | Frames the scope in a brainstorm, then delivers a **Market Map** (who buys, how much they pay, what alternatives exist, opportunity size) saved as a `.md`. | nothing — the entry point |
-| 2 | **competitive-benchmark** | Compares competitors in a matrix, analyzes gaps, and recommends a **wedge** (the specific entry point). | Market Map (#1) |
-| 3 | **discovery-interviews** | Two modes: **prepare** an anti-bias question guide (Mom Test style), and **synthesize** notes/transcripts into problem, frequency, impact, who suffers, current workaround. | wedge / Benchmark (#2) |
-| 4 | **problem-formulation** | Turns the evidence into a **sharp, singular problem** in two formats side by side — causal and job-to-be-done. Rejects solutions disguised as problems. | wedge (#2); interviews (#3) optional |
-| 5 | **prioritization** | Ranks problems/features to answer "if I solve only one thing, which is worth most?". Auto-picks the framework (Opportunity Scoring / ICE / RICE) and shows the reasoning. | a list of problems/opportunities |
-| 6 | **mvp-definition** | Defines the **smallest thing that delivers value** — isolates the value moment, produces scope (IN), cut list (OUT), build approach (manual / no-code / code), and the success signal. | formulated problem + prioritization (also runs standalone) |
-| — | **marclou-review** | Audits or shapes landing pages, pricing, copy, and positioning against **Marc Lou's 32 Principles of a Viral Product**. Two modes: **audit** (scorecard + top-5 prioritized fixes with concrete rewrites) and **build** (applies the principles as constraints while generating headlines, heroes, pricing, names). Compass, not checklist — flags deliberate deviations instead of forcing compliance. | nothing — standalone (pairs well after #6) |
-
-### Where to start
-
-Building a product from scratch? **Start at #1 (`market-research`)** — it produces the Market Map every later skill builds on. Skip a step only when you already own that input (e.g. a known market → jump to #2 or #4); skipping otherwise just forces the next skill to guess the missing data.
-
----
-
-## `writing/` — Writing & critique
+### `product/` — Product critique
 
 | Skill | What it does |
 |-------|--------------|
-| **blog-critic** | Deep, Socratic critique of a technical article you wrote — a critic, not a rewriter. Channels Fábio Akita's structural rigor and Lucas Montano's directness to push you on five dimensions (structure, storytelling, voice, depth, gaps): sharp observations + questions that force you to think harder, never a rewrite. Writes the critique in the article's own language (PT or EN). |
-| **blog-refiner** | The companion that *does* rewrite — collaboratively, section by section, in **your** voice. Runs a question → answer → rewrite → validate loop per block, pulling only from your material, and never homogenizes the prose into generic AI writing. Outputs the rewritten article to a new file. Pairs naturally right after a blog-critic pass: the critic names the problems, the refiner fixes them *with* you. |
+| **viral-product-review** | Landing/pricing/copy against Marc Lou's 32 Principles (audit or build). |
 
----
+### `writing/` — Writing & critique
 
-## `agents/` — Subagent personas
-
-Agents are Claude Code subagents (markdown + frontmatter) that wrap a goal and the skills that serve it. Unlike a skill (one workflow), an agent decides *which* skill to run *when*.
-
-| Agent | What it does |
+| Skill | What it does |
 |-------|--------------|
-| **product-manager** | A senior PM/PO that drives the whole Product OS pipeline. It locates where you are (which artifacts already exist), runs the next right `product/` skill via the Skill tool, respects the human-in-the-loop gates (interviews, the cut, prioritization), and never fakes evidence or marks a hypothesis as validated. Use it to take an idea from zero toward a defined MVP without orchestrating the six skills by hand. |
-
-Invoke it by delegating to the `product-manager` agent (e.g. "ask the product-manager agent to start discovery for …"). It runs on Opus.
-
----
+| **blog-critic** | Socratic critique of a technical article (not a rewrite). |
+| **blog-refiner** | Collaborative section-by-section rewrite in your voice. |
 
 ## Using a skill
 
-- **Automatic** — describe your task in plain language; Claude invokes the matching skill when the request fits the skill's trigger description.
-- **Explicit** — call it by name: `/market-research`, `/code-hygiene-review`, etc.
+- **Automatic** — describe the task; the agent matches the skill `description`.
+- **Explicit** — `/hygiene-review`, `/behavior-tests`, `/viral-product-review`, …
