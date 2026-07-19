@@ -3,23 +3,33 @@
   "notGrouped": "bottom",
   "groupings": [
     {
-      "title": "Engineering",
-      "description": "Session hygiene, behavior tests, project memory, and A-vs-B benchmarks.",
-      "skills": [
-        "hygiene-review",
-        "behavior-tests",
-        "project-docs",
-        "compare-alternatives"
-      ]
+      "title": "Review",
+      "description": "code/review — session-aftermath hygiene after large diffs. Reports only.",
+      "skills": ["hygiene-review"]
+    },
+    {
+      "title": "Tests",
+      "description": "code/tests — behavior coverage: flows, business rules, happy and bad paths.",
+      "skills": ["behavior-tests"]
+    },
+    {
+      "title": "Benchmark",
+      "description": "code/benchmark — disposable A-vs-B comparisons; answer over code.",
+      "skills": ["compare-alternatives"]
+    },
+    {
+      "title": "Project docs",
+      "description": "code/project-docs — durable agent memory (AGENTS.md + STATUS/DECISIONS/…).",
+      "skills": ["project-docs"]
     },
     {
       "title": "Product",
-      "description": "Landing page, pricing, and viral-product positioning critique.",
+      "description": "product/ — landing, pricing, and viral-product positioning critique.",
       "skills": ["viral-product-review"]
     },
     {
       "title": "Writing",
-      "description": "Technical blog critique and collaborative refinement.",
+      "description": "writing/blog — critique then collaborative rewrite of technical posts.",
       "skills": ["blog-critic", "blog-refiner"]
     }
   ]
