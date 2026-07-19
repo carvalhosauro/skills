@@ -1,5 +1,5 @@
 ---
-name: marclou-review
+name: viral-product-review
 description: >
   Audits or shapes a product's landing page, pricing, copy, and positioning using Marc Lou's
   32 Principles of a Viral Product (distilled from 5 years building 35 startups in public).
@@ -8,9 +8,8 @@ description: >
   is preparing a launch, or wants the product to be more shareable/viral — phrases like
   "review my landing page", "why is nobody buying", "how should I price this", "make this
   go viral", "audit my product page", "marc lou principles", even without saying "viral".
-  Works standalone or after mvp-definition in the Product OS (audits the thing you're about
-  to ship). Not a growth-hacking playbook: it covers what the product and its page look like,
-  not ads or content strategy.
+  Standalone skill — audits or shapes the thing you're about to ship. Not a growth-hacking
+  playbook: it covers what the product and its page look like, not ads or content strategy.
 ---
 
 # Viral Product Principles
@@ -125,8 +124,8 @@ contradictions — resolve them:
 4. **Deliberate deviations**: anything ❌ that might be *right* for this product's context,
    said explicitly, with the trade-off.
 
-Write the audit to a file (`viral-audit-<product>.md` alongside the user's other Product OS
-outputs, or the working directory) and summarize the verdict + top 5 in chat.
+Write the audit to a file (`viral-audit-<product>.md` in the working directory, or wherever
+the user keeps product docs) and summarize the verdict + top 5 in chat.
 
 ## Build mode — how to apply
 

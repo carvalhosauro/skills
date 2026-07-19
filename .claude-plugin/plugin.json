@@ -1,14 +1,17 @@
 {
   "name": "skills",
-  "version": "1.0.0",
-  "description": "Product OS and code quality skills",
+  "version": "1.2.0",
+  "description": "Code quality, project memory, writing, and product critique skills",
   "author": {
     "name": "Gustavo Carvalho",
     "email": "gustavo.carvalho@pigz.com.br"
   },
   "skills": [
-    "./code/quality/",
+    "./code/review/",
     "./code/tests/",
-    "./product/"
+    "./code/benchmark/",
+    "./code/project-docs/",
+    "./product/",
+    "./writing/"
   ]
 }

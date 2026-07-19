@@ -4,32 +4,24 @@
     "name": "Gustavo Carvalho",
     "email": "gustavo.carvalho@pigz.com.br"
   },
-  "description": "Product OS and code quality skills",
+  "description": "Code quality, project memory, writing, and product critique skills",
   "plugins": [
     {
       "name": "skills",
       "source": "./",
-      "description": "Product OS (idea to MVP) and code-quality skills",
-      "version": "1.1.0",
+      "description": "Engineering hygiene, behavior tests, project docs, writing, and viral-product-review",
+      "version": "1.2.0",
       "strict": false,
       "skills": [
-        "./product/market-research",
-        "./product/competitive-benchmark",
-        "./product/discovery-interviews",
-        "./product/problem-formulation",
-        "./product/prioritization",
-        "./product/mvp-definition",
-        "./product/marclou-review",
+        "./product/viral-product-review",
         "./code/project-docs",
-        "./code/quality/code-hygiene-review",
-        "./code/tests/test-coverage-and-logging",
-        "./code/experimental/disposable-scripts",
+        "./code/review/hygiene-review",
+        "./code/tests/behavior-tests",
+        "./code/benchmark/compare-alternatives",
         "./writing/blog/blog-critic",
         "./writing/blog/blog-refiner"
       ],
-      "agents": [
-        "./agents/product-manager.md"
-      ]
+      "agents": []
     }
   ]
 }

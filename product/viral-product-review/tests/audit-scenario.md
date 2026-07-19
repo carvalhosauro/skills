@@ -1,11 +1,11 @@
 # Test scenario — audit mode
 
-Regression test for `marclou-review`. Run it after any edit to `SKILL.md` by giving a fresh
+Regression test for `viral-product-review`. Run it after any edit to `SKILL.md` by giving a fresh
 subagent the skill file plus the prompt below, then scoring the output against the criteria.
 
 ## Prompt
 
-> Read `product/marclou-review/SKILL.md` and follow it exactly as if it were your loaded
+> Read `product/viral-product-review/SKILL.md` and follow it exactly as if it were your loaded
 > skill instructions.
 >
 > User request: "Review my landing page, why is nobody buying?"

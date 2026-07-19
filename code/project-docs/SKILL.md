@@ -1,15 +1,14 @@
 ---
 name: project-docs
 description: >-
-  Standardizes project-state documentation for AI agents on any harness
-  (Claude Code, Cursor, Codex, OpenCode). Creates and maintains AGENTS.md +
-  docs/{STATUS,ROADMAP,DECISIONS,DESIGN}.md with read order, session log,
-  decisions with reconsider-triggers, and phases with scope fences. Use when
-  the user asks to initialize project docs, standardize documentation across
-  projects, record a decision, update status/roadmap, or close a session
-  documenting what changed. Also triggers on phrases like "where are we in
-  the project", "next steps", "why did we decide X", "docs setup for agents",
-  "project memory", "continuity between sessions" — in English or Portuguese.
+  Standardizes durable project memory for AI agents (Claude Code, Cursor, Codex,
+  OpenCode): AGENTS.md + docs/{STATUS,ROADMAP,DECISIONS,DESIGN}.md with read
+  order, session log, and decisions with reconsider-triggers. Use when the user
+  asks to initialize project docs for agents, record an architecture/product
+  decision, update STATUS/ROADMAP after work, or close a session documenting
+  what changed. Also: "docs setup for agents", "project memory", "continuity
+  between sessions", "registrar decisão", "encerrar sessão nos docs" — EN or PT.
+  Not for product discovery or roadmap brainstorming without a docs/init ask.
 ---
 
 # Project Docs
