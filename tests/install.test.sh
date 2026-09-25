@@ -116,5 +116,12 @@ run "$r" >/dev/null 2>&1; rc=$?
 [ "$rc" -eq 1 ]
 check "no skills exits 1" $?
 
+# 14. dot-directories (e.g. a git worktree checked out under .worktrees/) are
+# excluded from discovery, not treated as a name collision
+r="$(new_fixture code/a .worktrees/feat/code/a)"
+run "$r" >/dev/null; rc=$?
+[ "$rc" -eq 0 ] && [ "$(readlink "$r/home/.claude/skills/a")" = "$r/repo/code/a" ]
+check "dot-directories excluded from discovery" $?
+
 echo
 [ "$fails" -eq 0 ] && echo "all passed" || { echo "$fails failed"; exit 1; }

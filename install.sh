@@ -77,7 +77,7 @@ SKILLS=()
 while IFS= read -r skillmd; do
   dir="$(cd "$(dirname "$skillmd")" && pwd -P)"
   is_nested "$dir" || SKILLS+=("$dir")
-done < <(find "$REPO_ROOT" -name SKILL.md -not -path '*/.git/*' | sort)
+done < <(find "$REPO_ROOT" -name SKILL.md -not -path '*/.git/*' -not -path "$REPO_ROOT/.*" | sort)
 
 if [ "${#SKILLS[@]}" -eq 0 ]; then
   echo "No SKILL.md found under $REPO_ROOT" >&2; exit 1
@@ -122,7 +122,7 @@ for target in "${TARGETS[@]}"; do
       echo "ok       $name"; ok=$((ok + 1)); continue
     fi
     if [ -e "$dest" ] || [ -L "$dest" ]; then
-      echo "skip     $name (exists, not ours: $dest)"; skipped=$((skipped + 1)); continue
+      echo "skip     $name (exists, not a current link: $dest)"; skipped=$((skipped + 1)); continue
     fi
 
     if [ "$MODE" = "copy" ]; then
