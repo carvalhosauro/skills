@@ -1,100 +1,147 @@
 #!/usr/bin/env bash
 #
-# install.sh — install this repo's skills and agents into your Claude config dir.
+# install.sh — link this repo's skills into your agents' skills directories.
 #
-# By default it SYMLINKS each skill into ~/.claude/skills/<name> and each agent
-# into ~/.claude/agents/<name>.md, so a later `git pull` updates everything you
-# installed. Use --copy to copy instead (a snapshot that won't track the repo).
+# Default target: ${CLAUDE_CONFIG_DIR:-~/.claude}/skills. Claude Code reads it,
+# and Cursor reads it too (compatibility dir), so one link serves both.
+# Skills are SYMLINKED, so `git pull` updates everything you installed.
 #
 # Usage:
-#   ./install.sh              # symlink all skills + agents
-#   ./install.sh --copy       # copy instead of symlink
-#   ./install.sh --uninstall  # remove the symlinks this repo created
+#   ./install.sh                  link every skill into the default target
+#   ./install.sh --target DIR     also link into DIR (repeatable), e.g. ~/.codex/skills
+#   ./install.sh --prune          after installing, drop dangling links into this repo
+#   ./install.sh --copy           copy instead of symlink (snapshot, won't track the repo)
+#   ./install.sh --uninstall      remove every link into this repo from each target
 #   ./install.sh --help
 #
-# Honors $CLAUDE_CONFIG_DIR (defaults to ~/.claude).
+# Never overwrites or deletes anything that is not a symlink into this repo.
 
 set -euo pipefail
+shopt -s nullglob
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
-REPO_ROOT="$SCRIPT_DIR"
-CLAUDE_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-SKILLS_DIR="$CLAUDE_DIR/skills"
-AGENTS_DIR="$CLAUDE_DIR/agents"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
+TARGETS=("${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills")
+MODE="link"      # link | copy
+ACTION="install" # install | uninstall
+PRUNE=0
 
-MODE="link"        # link | copy
-ACTION="install"   # install | uninstall
+usage() { awk 'NR > 1 && /^#/ { sub(/^# ?/, ""); print; next } NR > 1 { exit }' "${BASH_SOURCE[0]}"; }
 
-for arg in "$@"; do
-  case "$arg" in
+while [ $# -gt 0 ]; do
+  case "$1" in
     --copy)      MODE="copy" ;;
     --uninstall) ACTION="uninstall" ;;
-    -h|--help)
-      sed -n '2,18p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
-      exit 0 ;;
-    *) echo "unknown argument: $arg (try --help)" >&2; exit 1 ;;
+    --prune)     PRUNE=1 ;;
+    --target)
+      if [ $# -lt 2 ] || [ -z "$2" ]; then echo "--target needs a directory" >&2; exit 1; fi
+      TARGETS+=("$2"); shift ;;
+    -h|--help)   usage; exit 0 ;;
+    *) echo "unknown argument: $1 (try --help)" >&2; exit 1 ;;
   esac
+  shift
 done
 
-found=0; changed=0; skipped=0
-
-# Install / uninstall one item. $1=source path, $2=dest path, $3=display label.
-# Uses `-ef` (same inode, follows symlinks) so it works for dirs and files and
-# never clobbers a path it didn't create.
-process() {
-  local src="$1" dest="$2" label="$3"
-  found=$((found + 1))
-
-  if [ "$ACTION" = "uninstall" ]; then
-    if [ -L "$dest" ] && [ "$dest" -ef "$src" ]; then
-      rm "$dest"; echo "removed  $label"; changed=$((changed + 1))
-    else
-      echo "skip     $label (not a link into this repo)"; skipped=$((skipped + 1))
-    fi
-    return
-  fi
-
-  if [ -e "$dest" ] || [ -L "$dest" ]; then
-    if [ -L "$dest" ] && [ "$dest" -ef "$src" ]; then
-      echo "ok       $label (already installed)"; skipped=$((skipped + 1)); return
-    fi
-    echo "skip     $label (exists, not ours — remove it first: $dest)"; skipped=$((skipped + 1)); return
-  fi
-
-  if [ "$MODE" = "copy" ]; then
-    cp -R "$src" "$dest"; echo "copied   $label"
-  else
-    ln -s "$src" "$dest"; echo "linked   $label"
-  fi
-  changed=$((changed + 1))
+# True when $1 is a symlink whose link text points inside this repo.
+points_into_repo() {
+  [ -L "$1" ] || return 1
+  case "$(readlink "$1")" in "$REPO_ROOT"/*) return 0 ;; esac
+  return 1
 }
 
-# --- Skills: every directory containing a SKILL.md (excluding .git) ---
-mapfile -t SKILL_FILES < <(find "$REPO_ROOT" -name SKILL.md -not -path '*/.git/*' | sort)
-if [ "${#SKILL_FILES[@]}" -eq 0 ]; then
-  echo "No SKILL.md files found under $REPO_ROOT" >&2
+# --- Uninstall: remove our links from every target, nothing else ---
+if [ "$ACTION" = "uninstall" ]; then
+  for target in "${TARGETS[@]}"; do
+    removed=0
+    for entry in "$target"/*; do
+      if points_into_repo "$entry"; then
+        rm "$entry"; echo "removed  $(basename "$entry")"; removed=$((removed + 1))
+      fi
+    done
+    echo "$target: removed $removed"
+  done
+  exit 0
+fi
+
+# --- Discovery: every dir with SKILL.md, skipping skills nested in another skill ---
+is_nested() {
+  local d
+  d="$(dirname "$1")"
+  while [ "$d" != "$REPO_ROOT" ] && [ "$d" != "/" ]; do
+    [ -f "$d/SKILL.md" ] && return 0
+    d="$(dirname "$d")"
+  done
+  return 1
+}
+
+SKILLS=()
+while IFS= read -r skillmd; do
+  dir="$(cd "$(dirname "$skillmd")" && pwd -P)"
+  is_nested "$dir" || SKILLS+=("$dir")
+done < <(find "$REPO_ROOT" -name SKILL.md -not -path '*/.git/*' | sort)
+
+if [ "${#SKILLS[@]}" -eq 0 ]; then
+  echo "No SKILL.md found under $REPO_ROOT" >&2; exit 1
+fi
+
+# --- Collisions: two skills with the same basename would fight for one link ---
+dups="$(for d in "${SKILLS[@]}"; do basename "$d"; done | sort | uniq -d)"
+if [ -n "$dups" ]; then
+  while IFS= read -r name; do
+    echo "name collision: $name" >&2
+    for d in "${SKILLS[@]}"; do [ "$(basename "$d")" = "$name" ] && echo "  $d" >&2; done
+  done <<<"$dups"
   exit 1
 fi
-mkdir -p "$SKILLS_DIR"
-for skillmd in "${SKILL_FILES[@]}"; do
-  src_dir="$(cd "$(dirname "$skillmd")" && pwd -P)"
-  process "$src_dir" "$SKILLS_DIR/$(basename "$src_dir")" "$(basename "$src_dir")"
+
+# Cursor reads ~/.claude/skills already; linking into its own dirs duplicates skills.
+warn_duplicate_target() {
+  local real dup dup_real
+  real="$(cd "$1" && pwd -P)"
+  for dup in "$HOME/.agents/skills" "$HOME/.cursor/skills"; do
+    dup_real="$(cd "$dup" 2>/dev/null && pwd -P || echo "$dup")"
+    if [ "$real" = "$dup_real" ]; then
+      echo "warning: Cursor already reads ~/.claude/skills; linking into $1 duplicates skills in Cursor" >&2
+    fi
+  done
+}
+
+# --- Install ---
+for target in "${TARGETS[@]}"; do
+  mkdir -p "$target"
+  warn_duplicate_target "$target"
+  linked=0; ok=0; skipped=0; pruned=0
+
+  for src in "${SKILLS[@]}"; do
+    name="$(basename "$src")"
+    dest="$target/$name"
+
+    # Our own link, but dangling (skill moved category): replace it.
+    if points_into_repo "$dest" && [ ! -e "$dest" ]; then rm "$dest"; fi
+
+    if [ -L "$dest" ] && [ "$(readlink "$dest")" = "$src" ]; then
+      echo "ok       $name"; ok=$((ok + 1)); continue
+    fi
+    if [ -e "$dest" ] || [ -L "$dest" ]; then
+      echo "skip     $name (exists, not ours: $dest)"; skipped=$((skipped + 1)); continue
+    fi
+
+    if [ "$MODE" = "copy" ]; then
+      cp -R "$src" "$dest"; echo "copied   $name"
+    else
+      ln -s "$src" "$dest"; echo "linked   $name"
+    fi
+    linked=$((linked + 1))
+  done
+
+  if [ "$PRUNE" -eq 1 ]; then
+    for entry in "$target"/*; do
+      if points_into_repo "$entry" && [ ! -e "$entry" ]; then
+        rm "$entry"; echo "pruned   $(basename "$entry")"; pruned=$((pruned + 1))
+      fi
+    done
+  fi
+
+  echo "$target: found ${#SKILLS[@]} · new $linked · ok $ok · skipped $skipped · pruned $pruned"
 done
 
-# --- Agents: every *.md under agents/ ---
-shopt -s nullglob
-AGENT_FILES=("$REPO_ROOT"/agents/*.md)
-shopt -u nullglob
-if [ "${#AGENT_FILES[@]}" -gt 0 ]; then
-  mkdir -p "$AGENTS_DIR"
-  for agent in "${AGENT_FILES[@]}"; do
-    base="$(basename "$agent")"
-    process "$agent" "$AGENTS_DIR/$base" "${base%.md} (agent)"
-  done
-fi
-
-echo
-echo "Skills dir: $SKILLS_DIR"
-[ "${#AGENT_FILES[@]}" -gt 0 ] && echo "Agents dir: $AGENTS_DIR"
-echo "Found $found · ${ACTION%e}ed $changed · skipped $skipped"
-[ "$ACTION" = "install" ] && echo "Run /reload-plugins in Claude Code (or restart) to pick them up."
+echo "Restart your agent (or /reload-plugins in Claude Code) to pick up changes."
