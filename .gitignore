@@ -1,3 +1,11 @@
 .omc/
 *.skill
 *:Zone.Identifier
+
+# Public repo: never commit credential-shaped files.
+.env
+.env.*
+*.key
+*.pem
+*secret*
+*credentials*

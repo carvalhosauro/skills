@@ -3,6 +3,11 @@
   "notGrouped": "bottom",
   "groupings": [
     {
+      "title": "Git",
+      "description": "code/git — lean, domain-separated Conventional Commits.",
+      "skills": ["committing-changes"]
+    },
+    {
       "title": "Review",
       "description": "code/review — session-aftermath hygiene after large diffs. Reports only.",
       "skills": ["hygiene-review"]
@@ -18,19 +23,14 @@
       "skills": ["compare-alternatives"]
     },
     {
-      "title": "Project docs",
-      "description": "code/project-docs — durable agent memory (AGENTS.md + STATUS/DECISIONS/…).",
-      "skills": ["project-docs"]
-    },
-    {
       "title": "Product",
       "description": "product/ — landing, pricing, and viral-product positioning critique.",
       "skills": ["viral-product-review"]
     },
     {
       "title": "Writing",
-      "description": "writing/blog — critique then collaborative rewrite of technical posts.",
-      "skills": ["blog-critic", "blog-refiner"]
+      "description": "writing/ — humanizer (vendored) plus critique and collaborative rewrite of technical posts.",
+      "skills": ["humanizer", "blog-critic", "blog-refiner"]
     }
   ]
 }
