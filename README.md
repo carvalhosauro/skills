@@ -26,7 +26,10 @@ skills/
 │   └── blog/{blog-critic,blog-refiner}
 ├── product/viral-product-review
 ├── scripts/upstream-diff.sh
-└── tests/
+├── tests/
+├── install.sh
+├── skills.sh.json
+└── README.md
 ```
 
 ## Catalog
@@ -58,6 +61,7 @@ cd skills && ./install.sh --prune
 | `--prune` | After installing, remove dangling links into this repo. |
 | `--copy` | Copy instead of symlink (snapshot; won't track `git pull`). |
 | `--uninstall` | Remove every link into this repo from each target. |
+| `--help` | Print usage. |
 
 It never overwrites or deletes anything that is not a symlink into this repo.
 Restart the agent afterwards.
