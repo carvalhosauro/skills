@@ -34,7 +34,7 @@ You ARE authorized to create local git commits in the current repository, follow
 
 **One commit = one logical concern in one domain.** Do not bundle.
 
-- Split changes that touch different domains / bounded contexts (e.g. `money`, `channel`, `golden`, `domain`, `config`) into **separate commits**, even when made in the same session.
+- Split changes that touch different domains / bounded contexts (e.g. `auth`, `api`, `billing`, `config`) into **separate commits**, even when made in the same session.
 - Don't mix a refactor + a feature + an unrelated test-fixup in one commit. Separate them.
 - Stage selectively (`git add <paths>` or `git add -p`) to keep each commit focused — never blindly `git add -A` when the working tree spans domains.
 - Keep the diff reviewable: a reader should grasp one commit's intent without untangling unrelated edits.
@@ -48,15 +48,15 @@ You ARE authorized to create local git commits in the current repository, follow
 | `fix` | bug fix |
 | `refactor` | behavior-preserving restructure |
 | `perf` | performance, no behavior change |
-| `test` | tests only (golden, specs, fixtures) |
+| `test` | tests only (specs, fixtures) |
 | `docs` | docs/specs/plans/comments only |
-| `build` | build system, tsconfig, deps |
+| `build` | build system, deps |
 | `ci` | CI config |
 | `chore` | misc maintenance |
 | `style` | formatting only, no logic |
 | `revert` | reverts a prior commit |
 
-Scope = the domain touched: `feat(domain)`, `refactor(money)`, `test(golden)`, `docs`, `build(tsconfig)`.
+Scope = the domain touched: `feat(domain)`, `refactor(auth)`, `test(api)`, `docs`, `build(deps)`.
 
 ## Body & footer
 
@@ -74,20 +74,20 @@ Scope = the domain touched: `feat(domain)`, `refactor(money)`, `test(golden)`, `
 ## Example (one session, three domains → three commits)
 
 ```
-refactor(money): delegate duplicate helpers to the Money VO
+refactor(auth): extract token validation into a helper
 
-Replace formatMoney/parseMoney bodies with delegations to the shared Money VO.
-Behavior preserved byte-for-byte (golden + §9 invariants green, 0 drift).
-
-Co-Authored-By: <model name> <noreply@anthropic.com>
-```
-```
-test(golden): lock the structured-credit card scenario
+Replace the duplicated inline checks in login and refresh with a single
+validateToken helper. Behavior preserved (auth suite green, 0 regressions).
 
 Co-Authored-By: <model name> <noreply@anthropic.com>
 ```
 ```
-docs: add Fase 1 P1 plan
+test(api): cover pagination edge cases
+
+Co-Authored-By: <model name> <noreply@anthropic.com>
+```
+```
+docs: add onboarding guide
 
 Co-Authored-By: <model name> <noreply@anthropic.com>
 ```
