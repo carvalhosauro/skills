@@ -72,5 +72,13 @@ bash "$SCRIPT" "$root/local/badpath" >/dev/null 2>&1; rc=$?
 [ "$rc" -eq 1 ]
 check "missing upstream path exits 1" $?
 
+# 8. UPSTREAM.md with CRLF line endings is still parsed correctly
+mkdir -p "$root/local/crlf"
+cp "$root/up/skills/demo/SKILL.md" "$root/local/crlf/SKILL.md"
+printf 'Source: file://%s/up\r\nPath: /skills/demo\r\n' "$root" > "$root/local/crlf/UPSTREAM.md"
+out="$(bash "$SCRIPT" "$root/local/crlf" 2>&1)"; rc=$?
+[ "$rc" -eq 0 ] && grep -q '^upstream: ' <<<"$out"
+check "CRLF UPSTREAM.md handled" $?
+
 echo
 [ "$fails" -eq 0 ] && echo "all passed" || { echo "$fails failed"; exit 1; }

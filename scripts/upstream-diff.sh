@@ -16,7 +16,7 @@ dir="${1%/}"
 meta="$dir/UPSTREAM.md"
 [ -f "$meta" ] || { echo "no UPSTREAM.md in $dir" >&2; exit 1; }
 
-field() { sed -n "s/^$1:[[:space:]]*//p" "$meta" | head -n 1; }
+field() { sed -n "s/^$1:[[:space:]]*//p" "$meta" | head -n 1 | tr -d '\r' | sed 's/[[:space:]]*$//'; }
 
 src="$(field Source)"
 path="$(field Path)"
@@ -26,7 +26,7 @@ path="${path:-/}"
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 
-git clone -q --depth 1 "$src" "$tmp/up" 2>/dev/null || { echo "clone failed: $src" >&2; exit 1; }
+git clone -q --depth 1 "$src" "$tmp/up" || { echo "clone failed: $src" >&2; exit 1; }
 up="$tmp/up/${path#/}"
 [ -d "$up" ] || { echo "path not found upstream: $path" >&2; exit 1; }
 
