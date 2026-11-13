@@ -20,7 +20,8 @@ skills/
 │   ├── git/committing-changes
 │   ├── review/hygiene-review
 │   ├── tests/behavior-tests
-│   └── benchmark/compare-alternatives
+│   ├── benchmark/compare-alternatives
+│   └── frontend/pick-ui-library
 ├── writing/
 │   ├── humanizer            (vendored — see UPSTREAM.md)
 │   └── blog/{blog-critic,blog-refiner}
@@ -40,6 +41,7 @@ skills/
 | hygiene-review | code/review | own | Post-session readability and hygiene review via parallel subagents. Reports only. |
 | behavior-tests | code/tests | own | Behavior coverage: flows, business rules, happy and bad paths. |
 | compare-alternatives | code/benchmark | own | Throwaway A-vs-B code with a measured verdict. |
+| pick-ui-library | code/frontend | own, adapted from [emilkowalski/skills](https://github.com/emilkowalski/skills/blob/85e8e2363b713506e1d5b6e07a0eb2da66be1bc3/skills/pick-ui-library/SKILL.md) (MIT) | One library per React web task, checking the design system first. |
 | humanizer | writing | vendored: [blader/humanizer](https://github.com/blader/humanizer) | Rewrites AI-sounding prose so it reads naturally. |
 | blog-critic | writing/blog | own | Socratic critique of technical posts (PT or EN). |
 | blog-refiner | writing/blog | own | Section-by-section rewrite that keeps the author's voice. |

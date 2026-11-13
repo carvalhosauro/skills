@@ -23,6 +23,11 @@
       "skills": ["compare-alternatives"]
     },
     {
+      "title": "Frontend",
+      "description": "code/frontend — one curated library per React web task, design system first.",
+      "skills": ["pick-ui-library"]
+    },
+    {
       "title": "Product",
       "description": "product/ — landing, pricing, and viral-product positioning critique.",
       "skills": ["viral-product-review"]
