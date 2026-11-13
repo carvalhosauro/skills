@@ -18,6 +18,7 @@ Categories, one directory per skill, each with a `SKILL.md`.
 skills/
 ├── code/
 │   ├── git/committing-changes
+│   ├── implement/ponytail   (vendored — see UPSTREAM.md)
 │   ├── review/hygiene-review
 │   ├── tests/behavior-tests
 │   ├── benchmark/compare-alternatives
@@ -38,6 +39,7 @@ skills/
 | Skill | Category | Origin | What it does |
 |---|---|---|---|
 | committing-changes | code/git | own | Lean, domain-separated Conventional Commits with a co-author trailer. |
+| ponytail | code/implement | vendored: [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | Smallest complete change: reuse the codebase, stdlib, installed or mature libraries before new code. |
 | hygiene-review | code/review | own | Post-session readability and hygiene review via parallel subagents. Reports only. |
 | behavior-tests | code/tests | own | Behavior coverage: flows, business rules, happy and bad paths. |
 | compare-alternatives | code/benchmark | own | Throwaway A-vs-B code with a measured verdict. |
@@ -102,6 +104,7 @@ None of these auto-update; re-check occasionally.
 | Component | Source | Where it lives | Update procedure |
 |---|---|---|---|
 | humanizer | [blader/humanizer](https://github.com/blader/humanizer) | vendored in `writing/humanizer/` | `scripts/upstream-diff.sh writing/humanizer`, merge by hand, bump `Pinned:` and `Local changes` in `UPSTREAM.md` |
+| ponytail | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | vendored in `code/implement/ponytail/` | `scripts/upstream-diff.sh code/implement/ponytail`, merge by hand, bump `Pinned:` and `Local changes` in `UPSTREAM.md` |
 | superpowers, figma, github, gopls-lsp, php-lsp | [anthropics/claude-plugins-official](https://github.com/anthropics/claude-plugins-official) | Claude Code plugins | `claude plugin update <name>` |
 | caveman | [JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman) | Claude Code plugin | `claude plugin update caveman` |
 | intelephense | npm `intelephense` | global npm (needed by php-lsp) | `npm i -g intelephense@latest` |

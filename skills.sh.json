@@ -8,6 +8,11 @@
       "skills": ["committing-changes"]
     },
     {
+      "title": "Implement",
+      "description": "code/implement — ponytail (vendored): the smallest complete change, reuse before new code.",
+      "skills": ["ponytail"]
+    },
+    {
       "title": "Review",
       "description": "code/review — session-aftermath hygiene after large diffs. Reports only.",
       "skills": ["hygiene-review"]
