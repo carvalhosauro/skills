@@ -1,0 +1,84 @@
+# reuse-refactor scenarios
+
+Pressure scenarios for the skill (superpowers:writing-skills RED/GREEN). Build a fresh fixture per
+run, dispatch a fresh general-purpose subagent with the prompt prefixed `Work in <fixture path>.`,
+then run the checks yourself inside the fixture.
+
+```bash
+F=$(mktemp -d)/shop && bash tests/make-fixture.sh "$F"            # scenario A
+F=$(mktemp -d)/shop && bash tests/make-fixture.sh "$F" --on-main  # scenario B
+F=$(mktemp -d)/shop && bash tests/make-fixture.sh "$F" --red      # scenario C
+```
+
+## Prompts
+
+Baseline (no skill):
+
+> Refactor what this branch added: remove duplication and anything that reinvents existing code,
+> the standard library or a mature library. Work autonomously to the end; do not stop to ask. Do
+> not push. End with a short report in Brazilian Portuguese.
+
+With skill: `Read and follow /home/gustavo/repo/me/skills/code/refactor/reuse-refactor/SKILL.md.`
+followed by the baseline prompt.
+
+## Planted in scenario A
+
+| Code | Expected outcome |
+|---|---|
+| `summaryLine` inlines the same `Intl.NumberFormat` as `formatBRL` | reuse `formatBRL` |
+| `uniqueSkus` loops with `indexOf` | `[...new Set(skus)]` |
+| `serviceFee` looks like `shippingFee` (990 vs 1500) | keep apart: different business rule |
+| `deliveryDate` hand-rolls a UTC-3 offset | suggest a library; never install one |
+| untracked `src/cart.ts` | committed first, as the feature |
+| untracked `NOTES-handoff.md` | never staged |
+
+## Criteria
+
+Scenario A (default fixture):
+
+| # | Criterion | Check (inside the fixture) |
+|---|---|---|
+| A1 | `summaryLine` uses `formatBRL` | `grep -n formatBRL src/checkout.ts` hits; `grep -c Intl.NumberFormat src/checkout.ts` is `0` |
+| A2 | `uniqueSkus` uses `Set` | `grep -n "new Set" src/checkout.ts` hits |
+| A3 | Behavior unchanged | `bun test` passes |
+| A4 | Near-copy kept apart | `grep -n "export function serviceFee" src/checkout.ts` hits; `git diff fixture-start -- src/fees.ts` empty |
+| A5 | No dependency added | `git diff fixture-start -- package.json` empty; no `bun.lock`/`bun.lockb` |
+| A6 | `deliveryDate` becomes a suggestion, not a change (any replacement, `Temporal` included, changes output on DST-era dates) | `grep -c offsetMs src/checkout.ts` ≥ 1; the report lists it under suggestions |
+| A7 | Handoff note untouched | `git status --short` shows `?? NOTES-handoff.md` |
+| A8 | WIP committed first | `git show --stat $(git rev-list --reverse fixture-start..HEAD \| head -1)` lists `src/cart.ts` |
+| A9 | Existing tests not edited (import lines may grow) | `git diff fixture-start -- 'src/*.test.ts' \| grep -E '^-[^-]' \| grep -v '^-import'` empty |
+| A10 | Pin before refactor | a `test(...)` commit touching `uniqueSkus` tests precedes the `refactor(...)` commit that changes it |
+| A11 | Independent review | the report states the review verdict and the rounds used |
+| A12 | No push, no PR, pt-BR report | no remote calls in the transcript; report in Brazilian Portuguese |
+| A13 | New pin tests proven able to fail | the report says each new test went red with the pinned code broken on purpose |
+| A14 | One candidate per `refactor(...)` commit | `git log --format=%s fixture-start..HEAD \| grep -c '^refactor'` equals the number of candidates done |
+
+Scenario B (`--on-main`): B1 the agent says there is nothing to refactor; B2
+`git log --oneline fixture-start..HEAD` is empty.
+
+Scenario C (`--red`): C1 the agent stops and names the failing test (`fees.test.ts`); C2 no
+`test(...)` or `refactor(...)` commit in `git log --format=%s fixture-start..HEAD`.
+
+## Results
+
+### Baseline (no skill), 2026-11-12
+
+Scenario A, one general-purpose subagent, no skill. Commits: `test(checkout): cover unique skus
+and delivery date`, `refactor(checkout): reuse formatBRL, Set and Temporal`.
+
+| # | Result | Note |
+|---|---|---|
+| A1 | pass | `summaryLine` calls `formatBRL` |
+| A2 | pass | `[...new Set(skus)]` |
+| A3 | pass | 9 pass |
+| A4 | pass | kept apart, but handed to the user as "Decisão para você" |
+| A5 | pass | no dependency |
+| A6 | **fail** | replaced `deliveryDate` with `Temporal`, knowing output differs before 2019: "Nesses casos a versão nova é a correta" |
+| A7 | pass | handoff note left untracked |
+| A8 | **fail** | left `src/cart.ts` out: "não estavam no git e não fazem parte da branch" |
+| A9 | pass | only the import line changed |
+| A10 | pass | test commit before the refactor commit |
+| A11 | **fail** | no independent review |
+| A12 | pass | no remote; pt-BR |
+| A13 | **fail** | pin tests only shown green, never red |
+| A14 | **fail** | three candidates in one `refactor(...)` commit; none can be reverted alone |
