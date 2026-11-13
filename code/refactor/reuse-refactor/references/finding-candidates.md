@@ -32,7 +32,7 @@ stop at the first rung with a concrete replacement:
 - **Look-alikes with a different business meaning:** two fees with different values, two statuses
   that happen to share a rule. They evolve apart; merging couples them. A shared literal (the same
   threshold) is not proof of a shared rule.
-- **A replacement whose output differs for any input:** formatting, rounding, time zones and
+- **A replacement whose output differs for an input the code accepts:** formatting, rounding, time zones and
   daylight saving, ordering, duplicates, error type or message, null handling. It goes under
   "Sugestões" with the difference named.
 - Framework boilerplate, generated code, migrations, test setup.

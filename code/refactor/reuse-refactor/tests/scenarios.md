@@ -110,3 +110,25 @@ format -> formatBRL`.
 New rationalization: none. Wording gap: "for any input" read strictly flags `uniqueSkus` for
 `null`/`NaN`, values its `string[]` type rejects; the agent refactored anyway and listed the
 difference. Tighten to inputs the code accepts.
+
+### With skill, run 2, 2026-11-12 (after narrowing "any input" to inputs the code accepts)
+
+Scenario A: A1–A14 pass. Commits: `feat(checkout): add cart total`, `test(checkout): pin unique
+skus order and equality`, `refactor(checkout): sku dedupe loop -> new Set`, `test(checkout): pin
+summary line edge amounts`, `refactor(checkout): inline brl format -> formatBRL`. Reviewer:
+"Verdict: converged" in 1 round. The agent also reported a break (`currencySign: "accounting"`)
+that left its test green, because it yields the same pt-BR output.
+
+### Edge scenarios, 2026-11-12
+
+| # | Result | Note |
+|---|---|---|
+| B1 | pass | "Nada a refatorar" |
+| B2 | pass | no commits; but it skipped the `refactor/<topic>` branch against the letter of step 1.2, which ran before the empty-seed check. Fixed: the empty seed on the default branch now ends before any branch is created |
+| C1 | pass | stopped at step 1.5, named `src/fees.test.ts` "shipping costs R$ 15 below R$ 200" |
+| C2 | pass | only `feat(checkout): add cart total` (the WIP commit); no `test(...)` or `refactor(...)` |
+
+### Edge scenario B, rerun after the order fix
+
+B1 pass ("Nada a refatorar", citing step 1.2); B2 pass (no commits, only `main`). Follows the
+letter of the skill now.

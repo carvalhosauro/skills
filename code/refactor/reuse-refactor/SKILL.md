@@ -9,9 +9,12 @@ Removes code the branch added that duplicates the repo, the standard library, an
 dependency or a mature library, and proves nothing changed. It works to the end without asking:
 every candidate is either proven and committed, or reverted and listed in the report.
 
-**Refactor means identical behavior:** the same output, error and side effect for every input,
-bugs included. A replacement whose output differs for any input is not a refactor, even when the
-new output is more correct. Leave the code and list it under suggestions, naming the difference.
+**Refactor means identical behavior:** the same output, error and side effect for every input the
+code accepts (what its types, its validation and its callers allow), bugs included. A replacement
+whose output differs for an accepted input is not a refactor, even when the new output is more
+correct. Leave the code and list it under suggestions, naming the difference. Differences only for
+inputs the code rejects (a `null` where the type says `string[]`) do not block the refactor; note
+them in the report.
 
 ## Roles and stops
 
@@ -31,7 +34,8 @@ new output is more correct. Leave the code and list it under suggestions, naming
    one-file test command, the full verification command, lint and typecheck, the browser check
    (screenshots) if any, test constraints, and commit conventions. Project rules win.
 2. Find the default branch (`git symbolic-ref --short refs/remotes/origin/HEAD`, else `main` or
-   `master`). On it: `git switch -c refactor/<topic>`.
+   `master`). On it with a clean tree and no path named: report "nada a refatorar" and end, with no
+   branch and no commit. On it otherwise: `git switch -c refactor/<topic>`.
 3. If `git status --short --untracked-files=all` lists anything, it is the feature. Commit it now,
    as it is, staged by path, in Conventional Commits. Leave unstaged only files clearly from
    another task (handoff notes, drafts, scratch files); no candidate may touch them.

@@ -15,7 +15,8 @@ You are read-only: read code and use git diff, git show and git log only. You ru
 command that changes state.
 
 Check:
-1. Behavior change: any input whose output, error or side effect differs.
+1. Behavior change: any input the code accepts (its types, validation and callers) whose output,
+   error or side effect differs.
 2. Error handling or validation lost in moved or merged code.
 3. Abstraction over look-alikes: merged code that represents different business rules.
 4. Existing tests edited or weakened: assertions changed or removed.
