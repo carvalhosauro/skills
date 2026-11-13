@@ -33,6 +33,11 @@
       "skills": ["pick-ui-library"]
     },
     {
+      "title": "Refactor",
+      "description": "code/refactor — autonomous, test-proven removal of duplication and reinvented wheels.",
+      "skills": ["reuse-refactor"]
+    },
+    {
       "title": "Product",
       "description": "product/ — landing, pricing, and viral-product positioning critique.",
       "skills": ["viral-product-review"]

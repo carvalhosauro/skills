@@ -82,3 +82,31 @@ and delivery date`, `refactor(checkout): reuse formatBRL, Set and Temporal`.
 | A12 | pass | no remote; pt-BR |
 | A13 | **fail** | pin tests only shown green, never red |
 | A14 | **fail** | three candidates in one `refactor(...)` commit; none can be reverted alone |
+
+### With skill, run 1, 2026-11-12
+
+Scenario A, one general-purpose subagent told to read `SKILL.md`. Commits: `feat(checkout): add
+cart total`, `test(checkout): pin unique skus order and dedupe`, `refactor(checkout): unique skus
+loop -> set`, `test(checkout): pin summary line edge totals`, `refactor(checkout): inline brl
+format -> formatBRL`.
+
+| # | Result | Note |
+|---|---|---|
+| A1 | pass | |
+| A2 | pass | |
+| A3 | pass | 11 pass |
+| A4 | pass | under "Pulado", with the reason; no question to the user |
+| A5 | pass | |
+| A6 | pass | `deliveryDate` kept; "Sugestões" names `Temporal`/date-fns-tz and the DST difference |
+| A7 | pass | |
+| A8 | pass | `src/cart.ts` committed first |
+| A9 | pass | |
+| A10 | pass | |
+| A11 | pass | general-purpose reviewer, round 1 "Verdict: converged" |
+| A12 | pass | |
+| A13 | pass | each new test seen red with the code broken, green after `git restore` |
+| A14 | pass | 2 candidates, 2 `refactor(...)` commits |
+
+New rationalization: none. Wording gap: "for any input" read strictly flags `uniqueSkus` for
+`null`/`NaN`, values its `string[]` type rejects; the agent refactored anyway and listed the
+difference. Tighten to inputs the code accepts.
