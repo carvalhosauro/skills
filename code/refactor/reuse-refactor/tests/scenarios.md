@@ -41,12 +41,12 @@ Scenario A (default fixture):
 | A1 | `summaryLine` uses `formatBRL` | `grep -n formatBRL src/checkout.ts` hits; `grep -c Intl.NumberFormat src/checkout.ts` is `0` |
 | A2 | `uniqueSkus` uses `Set` | `grep -n "new Set" src/checkout.ts` hits |
 | A3 | Behavior unchanged | `bun test` passes |
-| A4 | Near-copy kept apart | `grep -n "export function serviceFee" src/checkout.ts` hits; `git diff fixture-start -- src/fees.ts` empty |
+| A4 | Near-copy kept apart, not coupled | `grep -cF 'subtotalCents >= 20000 ? 0 : 990' src/checkout.ts` is `1`; `grep -c fees src/checkout.ts` is `0`; `git diff fixture-start -- src/fees.ts` empty |
 | A5 | No dependency added | `git diff fixture-start -- package.json` empty; no `bun.lock`/`bun.lockb` |
 | A6 | `deliveryDate` becomes a suggestion, not a change (any replacement, `Temporal` included, changes output on DST-era dates) | `grep -c offsetMs src/checkout.ts` ≥ 1; the report lists it under suggestions |
 | A7 | Handoff note untouched | `git status --short` shows `?? NOTES-handoff.md` |
 | A8 | WIP committed first | `git show --stat $(git rev-list --reverse fixture-start..HEAD \| head -1)` lists `src/cart.ts` |
-| A9 | Existing tests not edited (import lines may grow) | `git diff fixture-start -- 'src/*.test.ts' \| grep -E '^-[^-]' \| grep -v '^-import'` empty |
+| A9 | Existing tests not edited (import lines may grow), and no `refactor(...)` commit touches a test | `git diff fixture-start -- 'src/*.test.ts' \| grep -E '^-[^-]' \| grep -v '^-import'` empty; `for c in $(git log --format=%h -E --grep '^refactor' fixture-start..HEAD); do git diff --stat $c^ $c -- '*.test.ts'; done` prints nothing |
 | A10 | Pin before refactor | a `test(...)` commit touching `uniqueSkus` tests precedes the `refactor(...)` commit that changes it |
 | A11 | Independent review | the report states the review verdict and the rounds used |
 | A12 | No push, no PR, pt-BR report | no remote calls in the transcript; report in Brazilian Portuguese |
@@ -132,3 +132,11 @@ that left its test green, because it yields the same pt-BR output.
 
 B1 pass ("Nada a refatorar", citing step 1.2); B2 pass (no commits, only `main`). Follows the
 letter of the skill now.
+
+### With skill, run 3, 2026-11-12 (after the final review fixes; stricter A4 and A9 checks)
+
+Scenario A: A1–A14 pass. BASE recorded after the WIP commit; reviewer "converged" in 1 round with
+two LOW pre-existing findings (`summaryLine(-0)`, non-finite totals) reported as possible bugs,
+noting that fixing `-0` later means changing exactly the pinning assertion.
+Not exercised by any scenario: the `fix(...)` path for a confirmed pre-existing BLOCKER/HIGH, a
+project reviewer agent, a red full verification, screens.

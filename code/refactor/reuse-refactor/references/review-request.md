@@ -1,13 +1,14 @@
 # Review request
 
 Dispatch one fresh subagent (Agent tool). If the project has its own reviewer agent
-(`.claude/agents/*review*`), use that subagent type; otherwise a general-purpose one. Send only the
-text below, filled in: never the conversation, your reasoning or your opinion of the code.
+(`.claude/agents/*review*`), use that subagent type; it may answer in its own format, which
+SKILL.md step 4 maps. Otherwise a general-purpose one. Send only the text below, filled in: never
+the conversation, your reasoning or your opinion of the code.
 
 ```text
 Review a pure refactor. Intent: pure refactor, identical behavior.
 Repo: <absolute path>
-Target: <round 1: git diff <sha before the first test(...) commit>..HEAD |
+Target: <round 1: git diff <BASE>..HEAD, BASE recorded in SKILL.md step 1 |
   rounds 2 and 3: git diff <last reviewed sha>..HEAD>
 Commits: <sha and subject of each test(...), refactor(...) and fix(...) commit in the target>
 

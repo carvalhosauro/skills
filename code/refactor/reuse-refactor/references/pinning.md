@@ -24,4 +24,5 @@ unchanged, and that would fail if the behavior changed.
    screenshots of each screen that renders the candidate, in the states, themes and widths the
    project's check uses. Keep them outside the repo. After the refactor, take "after" and open both.
 6. **Existing tests are never edited or weakened.** You may add imports and new test cases to an
-   existing test file.
+   existing test file. One exception: the `fix(...)` commit for a bug that was already there
+   changes exactly the pin assertion that captured the buggy output (SKILL.md step 4).

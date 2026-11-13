@@ -39,11 +39,13 @@ them in the report.
 3. If `git status --short --untracked-files=all` lists anything, it is the feature. Commit it now,
    as it is, staged by path, in Conventional Commits. Leave unstaged only files clearly from
    another task (handoff notes, drafts, scratch files); no candidate may touch them.
-4. The seed: the path the user named, else
-   `git diff --name-only $(git merge-base HEAD <default>)..HEAD`. Empty seed: report "nada a
-   refatorar" and end.
+4. The seed: the path the user named, else the code the branch adds,
+   `git diff $(git merge-base HEAD <default>)..HEAD`. Work from the added and changed lines; the
+   rest of a touched file is context, not seed. Empty seed: report "nada a refatorar" and end.
 5. Baseline: run the tests for the seed's area, lint and typecheck. Red: stop, name the failing
    tests.
+6. Record **BASE** = `git rev-parse HEAD`. The review target, the "was it already there?" check and
+   the triage of a red full verification all use it.
 
 ## 2. Find candidates
 
@@ -60,7 +62,9 @@ the report, with the reason.
    validation. Never add a dependency: a candidate that needs one is reverted and becomes a
    suggestion.
 4. **Prove:** the pinned tests (unchanged), the tests next to every touched file, lint and
-   typecheck. A screen: take the "after" screenshots and compare them with "before".
+   typecheck. A screen: take the "after" screenshots in the same states, themes and widths and
+   compare them with "before". The markup may change; what the user sees may not. Any visible
+   difference is red.
 5. **Red:** fix it, at most **2 attempts**. Still red: `git restore` the candidate's files, keep
    the test commit (it pins the current code), list the candidate under "Pulado".
 6. **Green: commit this candidate alone,** `refactor(<scope>): <what> -> <what replaced it>`. One
@@ -69,11 +73,18 @@ the report, with the reason.
 ## 4. Independent review
 
 Nobody approves their own code. Read `references/review-request.md` and dispatch a fresh subagent
-with that request. Then act on CONFIRMED BLOCKER and HIGH findings only:
-- **Introduced by the refactor** (`pre-existing: no`): `git revert --no-edit <refactor sha>` and
-  list the candidate under "Pulado". Do not argue for it.
-- **Already there before** (`pre-existing: yes`): write the test that reproduces it and watch it
-  fail, fix it, commit `fix(<scope>): <bug>`, list it under "Bugs corrigidos".
+with that request. Then act on CONFIRMED BLOCKER and HIGH findings only (a project reviewer with
+its own format: its blocking findings, or a blocking verdict). Decide yourself whether each one
+was already there: open the code at BASE (`git show <BASE>:<path>`); do not rely on the
+reviewer's label.
+- **A behavior change the refactor introduced** (lost validation or error handling counts):
+  `git revert --no-edit <refactor sha>` and list the candidate under "Pulado". Do not argue for
+  it. A revert that conflicts: revert the newer candidates that touch the same file first.
+- **Another problem the refactor introduced** (a new test that would stay green, an abstraction
+  over look-alikes, net growth): fix it in a new commit and prove again.
+- **Already there at BASE:** write the test that reproduces it and watch it fail, then fix it. In
+  that same `fix(<scope>): <bug>` commit, change exactly the pin assertion that captured the buggy
+  output, and say so in the report. List it under "Bugs corrigidos".
 - MEDIUM, LOW and PLAUSIBLE go in the report.
 
 Rounds 2 and 3 review only the delta since the last reviewed commit. **At most 3 rounds.**
@@ -82,8 +93,11 @@ Anything still open after the 3rd: revert those candidates.
 ## 5. Full verification
 
 Run the project's full verification command once, in the background or with a long timeout. A
-timeout is not red: run it again. Red: fix it, or revert the candidate that caused it, and run
-again.
+timeout is not red: run it again. Red: run each failing test at BASE (`git worktree add <tmp>
+<BASE>`, run it there, then `git worktree remove <tmp>`).
+- Red at BASE too: it is not yours. List it under "Não verificado" and change nothing.
+- Green at BASE: revert the `refactor(...)` commits newest first until it is green again; each
+  reverted candidate goes under "Pulado".
 
 ## 6. Final report
 
